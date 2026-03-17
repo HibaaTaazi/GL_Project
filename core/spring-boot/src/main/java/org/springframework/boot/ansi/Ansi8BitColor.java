@@ -29,6 +29,16 @@ import org.springframework.util.Assert;
  */
 public final class Ansi8BitColor implements AnsiElement {
 
+	private static final int MIN_COLOR_CODE = 0;
+
+	private static final int MAX_COLOR_CODE = 255;
+
+	private static final int HASH = 31;
+
+	private static final String FOREGROUND_PREFIX = "38;5;";
+
+	private static final String BACKGROUND_PREFIX = "48;5;";
+
 	private final String prefix;
 
 	private final int code;
@@ -40,7 +50,8 @@ public final class Ansi8BitColor implements AnsiElement {
 	 * @throws IllegalArgumentException if color code is not between 0 and 255.
 	 */
 	private Ansi8BitColor(String prefix, int code) {
-		Assert.isTrue(code >= 0 && code <= 255, "'code' must be between 0 and 255");
+		Assert.isTrue(code >= MIN_COLOR_CODE && code <= MAX_COLOR_CODE,
+				"'code' must be between " + MIN_COLOR_CODE + " and " + MAX_COLOR_CODE);
 		this.prefix = prefix;
 		this.code = code;
 	}
@@ -59,7 +70,7 @@ public final class Ansi8BitColor implements AnsiElement {
 
 	@Override
 	public int hashCode() {
-		return this.prefix.hashCode() * 31 + this.code;
+		return this.prefix.hashCode() * HASH + this.code;
 	}
 
 	@Override
@@ -73,7 +84,7 @@ public final class Ansi8BitColor implements AnsiElement {
 	 * @return an ANSI color code instance
 	 */
 	public static Ansi8BitColor foreground(int code) {
-		return new Ansi8BitColor("38;5;", code);
+		return new Ansi8BitColor(FOREGROUND_PREFIX, code);
 	}
 
 	/**
@@ -82,7 +93,7 @@ public final class Ansi8BitColor implements AnsiElement {
 	 * @return an ANSI color code instance
 	 */
 	public static Ansi8BitColor background(int code) {
-		return new Ansi8BitColor("48;5;", code);
+		return new Ansi8BitColor(BACKGROUND_PREFIX, code);
 	}
 
 }
