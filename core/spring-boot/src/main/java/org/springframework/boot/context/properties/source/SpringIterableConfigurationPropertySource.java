@@ -254,22 +254,40 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 				}
 			}
 		}
-
 		private void tryUpdate(EnumerablePropertySource<?> propertySource) {
 			Data data = this.data;
-			String[] lastUpdated = (data != null) ? data.lastUpdated() : null;
 			String[] propertyNames = propertySource.getPropertyNames();
-			if (lastUpdated != null && Arrays.equals(lastUpdated, propertyNames)) {
+			if (isUpToDate(data, propertyNames)) {
 				return;
 			}
 			int size = propertyNames.length;
 			Map<ConfigurationPropertyName, Set<String>> mappings = cloneOrCreate(
-					(data != null) ? data.mappings() : null, size);
+					getExistingMappings(data), size);
 			Map<String, ConfigurationPropertyName> reverseMappings = cloneOrCreate(
-					(data != null) ? data.reverseMappings() : null, size);
-			Set<ConfigurationPropertyName> descendants = (!this.captureDescendants) ? null : new HashSet<>();
+					getExistingReverseMappings(data), size);
+			buildMappings(propertyNames, mappings, reverseMappings);
+			Set<ConfigurationPropertyName> descendants = buildDescendants(propertyNames, reverseMappings);
 			Map<String, Object> systemEnvironmentCopy = (!this.systemEnvironmentSource) ? null
 					: copySource(propertySource);
+			this.data = buildData(mappings, reverseMappings, descendants, systemEnvironmentCopy, propertyNames);
+		}
+
+		private boolean isUpToDate(@Nullable Data data, String[] propertyNames) {
+			String[] lastUpdated = (data != null) ? data.lastUpdated() : null;
+			return lastUpdated != null && Arrays.equals(lastUpdated, propertyNames);
+		}
+
+		private @Nullable Map<ConfigurationPropertyName, Set<String>> getExistingMappings(@Nullable Data data) {
+			return (data != null) ? data.mappings() : null;
+		}
+
+		private @Nullable Map<String, ConfigurationPropertyName> getExistingReverseMappings(@Nullable Data data) {
+			return (data != null) ? data.reverseMappings() : null;
+		}
+
+		private void buildMappings(String[] propertyNames,
+				Map<ConfigurationPropertyName, Set<String>> mappings,
+				Map<String, ConfigurationPropertyName> reverseMappings) {
 			for (PropertyMapper propertyMapper : this.mappers) {
 				for (String propertyName : propertyNames) {
 					if (!reverseMappings.containsKey(propertyName)) {
@@ -281,15 +299,34 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 					}
 				}
 			}
+		}
+
+		private @Nullable Set<ConfigurationPropertyName> buildDescendants(String[] propertyNames,
+				Map<String, ConfigurationPropertyName> reverseMappings) {
+			if (!this.captureDescendants) {
+				return null;
+			}
+			Set<ConfigurationPropertyName> descendants = new HashSet<>();
 			for (String propertyName : propertyNames) {
 				addParents(descendants, reverseMappings.get(propertyName));
 			}
+			return descendants;
+		}
+
+		private Data buildData(Map<ConfigurationPropertyName, Set<String>> mappings,
+				Map<String, ConfigurationPropertyName> reverseMappings,
+				@Nullable Set<ConfigurationPropertyName> descendants,
+				@Nullable Map<String, Object> systemEnvironmentCopy,
+				String[] propertyNames) {
 			ConfigurationPropertyName[] configurationPropertyNames = this.immutable
 					? reverseMappings.values().toArray(new ConfigurationPropertyName[0]) : null;
-			lastUpdated = this.immutable ? null : propertyNames;
-			this.data = new Data(mappings, reverseMappings, descendants, configurationPropertyNames,
+			String[] lastUpdated = this.immutable ? null : propertyNames;
+			return new Data(mappings, reverseMappings, descendants, configurationPropertyNames,
 					systemEnvironmentCopy, lastUpdated);
 		}
+
+
+
 
 		@SuppressWarnings("unchecked")
 		private HashMap<String, Object> copySource(EnumerablePropertySource<?> propertySource) {
