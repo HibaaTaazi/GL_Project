@@ -67,10 +67,10 @@ public enum WebApplicationType {
 				return deduced;
 			}
 		}
-		return isServletApplication() ? WebApplicationType.SERVLET : WebApplicationType.NONE;
+		return isServletApplicationPresent() ? WebApplicationType.SERVLET : WebApplicationType.NONE;
 	}
 
-	private static boolean isServletApplication() {
+	private static boolean isServletApplicationPresent() {
 		for (String servletIndicatorClass : SERVLET_INDICATOR_CLASSES) {
 			if (!ClassUtils.isPresent(servletIndicatorClass, null)) {
 				return false;
@@ -84,11 +84,11 @@ public enum WebApplicationType {
 		@Override
 		public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 			for (String servletIndicatorClass : SERVLET_INDICATOR_CLASSES) {
-				registerTypeIfPresent(servletIndicatorClass, classLoader, hints);
+				registerTypeIfPresent(hints, servletIndicatorClass, classLoader);
 			}
 		}
 
-		private void registerTypeIfPresent(String typeName, @Nullable ClassLoader classLoader, RuntimeHints hints) {
+		private void registerTypeIfPresent(RuntimeHints hints, String typeName,@Nullable ClassLoader classLoader ) {
 			if (ClassUtils.isPresent(typeName, classLoader)) {
 				hints.reflection().registerType(TypeReference.of(typeName));
 			}
