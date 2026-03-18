@@ -62,9 +62,9 @@ public enum WebApplicationType {
 	 */
 	public static WebApplicationType deduce() {
 		for (Deducer deducer : SpringFactoriesLoader.forDefaultResourceLocation().load(Deducer.class)) {
-			WebApplicationType deduced = deducer.deduceWebApplicationType();
-			if (deduced != null) {
-				return deduced;
+			WebApplicationType deducedWebApplicationType = deducer.deduceWebApplicationType();
+			if (deducedWebApplicationType != null) {
+				return deducedWebApplicationType;
 			}
 		}
 		return isServletApplicationPresent() ? WebApplicationType.SERVLET : WebApplicationType.NONE;
