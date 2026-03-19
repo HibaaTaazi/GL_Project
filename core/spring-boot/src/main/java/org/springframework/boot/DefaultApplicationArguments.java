@@ -35,13 +35,13 @@ import org.springframework.util.Assert;
  */
 public class DefaultApplicationArguments implements ApplicationArguments {
 
-	private final Source source;
+	private final CommandLineSource source;
 
 	private final String[] args;
 
 	public DefaultApplicationArguments(String... args) {
 		Assert.notNull(args, "'args' must not be null");
-		this.source = new Source(args);
+		this.source = new CommandLineSource(args);
 		this.args = args;
 	}
 
@@ -72,9 +72,9 @@ public class DefaultApplicationArguments implements ApplicationArguments {
 		return this.source.getNonOptionArgs();
 	}
 
-	private static class Source extends SimpleCommandLinePropertySource {
+	private static class CommandLineSource extends SimpleCommandLinePropertySource {
 
-		Source(String[] args) {
+		CommandLineSource(String[] args) {
 			super(args);
 		}
 
