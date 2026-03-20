@@ -98,13 +98,17 @@ public class RandomValuePropertySource extends PropertySource<Random> {
 		if (type.equals("long")) {
 			return getSource().nextLong();
 		}
-		String range = getRange(type, "int");
-		if (range != null) {
-			return getNextIntInRange(Range.of(range, Integer::parseInt));
+		if (type.startsWith("int[")) {
+			return getNextIntInRange(Range.of(getRange(type, "int"), Integer::parseInt));
 		}
-		range = getRange(type, "long");
-		if (range != null) {
-			return getNextLongInRange(Range.of(range, Long::parseLong));
+		if (type.startsWith("long[")) {
+			return getNextLongInRange(Range.of(getRange(type, "long"), Long::parseLong));
+		}
+		if (type.startsWith("int(")) {
+			return getNextIntInRange(Range.of(getRange(type, "int"), Integer::parseInt));
+		}
+		if (type.startsWith("long(")) {
+			return getNextLongInRange(Range.of(getRange(type, "long"), Long::parseLong));
 		}
 		if (type.equals("uuid")) {
 			return UUID.randomUUID().toString();
@@ -112,14 +116,17 @@ public class RandomValuePropertySource extends PropertySource<Random> {
 		return getRandomBytes();
 	}
 
-	private @Nullable String getRange(String type, String prefix) {
-		if (type.startsWith(prefix)) {
-			int startIndex = prefix.length() + 1;
-			if (type.length() > startIndex) {
-				return type.substring(startIndex, type.length() - 1);
-			}
+	private String getRange(String type, String prefix) {
+		if (!type.startsWith(prefix)) {
+			throw new IllegalArgumentException(
+					"Type '" + type + "' does not start with prefix '" + prefix + "'");
 		}
-		return null;
+		int startIndex = prefix.length() + 1;
+		if (type.length() <= startIndex) {
+			throw new IllegalArgumentException(
+					"Type '" + type + "' does not contain a valid range after prefix '" + prefix + "'");
+		}
+		return type.substring(startIndex, type.length() - 1);
 	}
 
 	private int getNextIntInRange(Range<Integer> range) {
@@ -129,9 +136,11 @@ public class RandomValuePropertySource extends PropertySource<Random> {
 	}
 
 	private long getNextLongInRange(Range<Long> range) {
-		OptionalLong first = getSource().longs(1, range.getMin(), range.getMax()).findFirst();
-		assertPresent(first.isPresent(), range);
-		return first.getAsLong();
+		long min = range.getMin();
+		long max = range.getMax();
+		long value = getSource().nextLong();
+		value = (value == Long.MIN_VALUE) ? 0 : Math.abs(value);
+		return min + (value % (max - min));
 	}
 
 	private void assertPresent(boolean present, Range<?> range) {
