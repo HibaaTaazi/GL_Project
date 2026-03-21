@@ -45,11 +45,9 @@ public final class LoggerConfiguration {
 	 * @param effectiveLevel the effective level of the logger
 	 */
 	public LoggerConfiguration(String name, @Nullable LogLevel configuredLevel, LogLevel effectiveLevel) {
-		Assert.notNull(name, "'name' must not be null");
-		Assert.notNull(effectiveLevel, "'effectiveLevel' must not be null");
-		this.name = name;
-		this.levelConfiguration = (configuredLevel != null) ? LevelConfiguration.of(configuredLevel) : null;
-		this.inheritedLevelConfiguration = LevelConfiguration.of(effectiveLevel);
+		this(name,
+				(configuredLevel != null) ? LevelConfiguration.of(configuredLevel) : null,
+				LevelConfiguration.of(effectiveLevel));
 	}
 
 	/**
