@@ -48,6 +48,14 @@ class LoggerConfigurationTests {
 	}
 
 	@Test
+	void firstConstructorCorrectlyCreatesConfiguration() {
+		LoggerConfiguration configuration = new LoggerConfiguration("test", LogLevel.DEBUG, LogLevel.INFO);
+		assertThat(configuration.getName()).isEqualTo("test");
+		assertThat(configuration.getConfiguredLevel()).isEqualTo(LogLevel.DEBUG);
+		assertThat(configuration.getEffectiveLevel()).isEqualTo(LogLevel.INFO);
+	}
+
+	@Test
 	@SuppressWarnings("NullAway") // Test null check
 	void createWithLevelConfigurationWhenNameIsNullThrowsException() {
 		assertThatIllegalArgumentException()
