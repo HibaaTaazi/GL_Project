@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.aot.AotDetector;
-import org.springframework.boot.SpringApplication.Startup;
+import org.springframework.boot.Startup;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;

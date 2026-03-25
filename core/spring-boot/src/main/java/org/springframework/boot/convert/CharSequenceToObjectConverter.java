@@ -31,7 +31,7 @@ import org.springframework.core.convert.converter.ConditionalGenericConverter;
  *
  * @author Phillip Webb
  */
-class CharSequenceToObjectConverter implements ConditionalGenericConverter {
+public class CharSequenceToObjectConverter implements ConditionalGenericConverter {
 
 	private static final TypeDescriptor STRING = TypeDescriptor.valueOf(String.class);
 
@@ -47,7 +47,7 @@ class CharSequenceToObjectConverter implements ConditionalGenericConverter {
 
 	private final ConversionService conversionService;
 
-	CharSequenceToObjectConverter(ConversionService conversionService) {
+	public CharSequenceToObjectConverter(ConversionService conversionService) {
 		this.conversionService = conversionService;
 	}
 

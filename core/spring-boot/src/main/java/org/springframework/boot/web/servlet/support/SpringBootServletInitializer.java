@@ -37,7 +37,7 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.ParentContextApplicationContextInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
-import org.springframework.boot.context.logging.LoggingApplicationListener;
+import org.springframework.boot.context.LoggingApplicationListener;
 import org.springframework.boot.web.context.servlet.AnnotationConfigServletWebApplicationContext;
 import org.springframework.boot.web.context.servlet.ApplicationServletEnvironment;
 import org.springframework.boot.web.context.servlet.WebApplicationContextInitializer;

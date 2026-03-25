@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.context.logging;
+package org.springframework.boot.context;
 
 import java.io.FileNotFoundException;
 import java.util.Collections;

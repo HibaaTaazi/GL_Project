@@ -24,6 +24,7 @@ import java.util.Map;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.boot.convert.ApplicationConversionService;
+import org.springframework.boot.convert.CharSequenceToObjectConverter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.convert.ConversionService;
@@ -47,7 +48,7 @@ class ConversionServiceDeducer {
 	@Nullable List<ConversionService> getConversionServices() {
 		if (hasUserDefinedConfigurationServiceBean()) {
 			return Collections.singletonList(this.applicationContext
-				.getBean(ConfigurableApplicationContext.CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
+					.getBean(ConfigurableApplicationContext.CONVERSION_SERVICE_BEAN_NAME, ConversionService.class));
 		}
 		if (this.applicationContext instanceof ConfigurableApplicationContext configurableContext) {
 			return getConversionServices(configurableContext);
@@ -78,7 +79,7 @@ class ConversionServiceDeducer {
 	private Map<String, Object> addBeans(ConfigurableApplicationContext applicationContext,
 			FormattingConversionService converterService) {
 		DefaultConversionService.addCollectionConverters(converterService);
-		converterService.addConverter(new ConfigurationPropertiesCharSequenceToObjectConverter(converterService));
+		converterService.addConverter(new CharSequenceToObjectConverter(converterService));
 		return ApplicationConversionService.addBeans(converterService, applicationContext.getBeanFactory(),
 				ConfigurationPropertiesBinding.VALUE);
 	}
@@ -86,7 +87,7 @@ class ConversionServiceDeducer {
 	private boolean hasUserDefinedConfigurationServiceBean() {
 		String beanName = ConfigurableApplicationContext.CONVERSION_SERVICE_BEAN_NAME;
 		return this.applicationContext.containsBean(beanName) && this.applicationContext.getAutowireCapableBeanFactory()
-			.isTypeMatch(beanName, ConversionService.class);
+				.isTypeMatch(beanName, ConversionService.class);
 	}
 
 }

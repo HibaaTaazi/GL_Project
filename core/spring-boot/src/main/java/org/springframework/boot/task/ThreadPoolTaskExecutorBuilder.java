@@ -18,8 +18,6 @@ package org.springframework.boot.task;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.jspecify.annotations.Nullable;
@@ -45,7 +43,7 @@ import org.springframework.util.CollectionUtils;
  * @author Yanming Zhou
  * @since 3.2.0
  */
-public class ThreadPoolTaskExecutorBuilder {
+public class ThreadPoolTaskExecutorBuilder extends AbstractTaskBuilderSupport<ThreadPoolTaskExecutorBuilder> {
 
 	private final @Nullable Integer queueCapacity;
 
@@ -339,12 +337,6 @@ public class ThreadPoolTaskExecutorBuilder {
 			this.customizers.forEach((customizer) -> customizer.customize(taskExecutor));
 		}
 		return taskExecutor;
-	}
-
-	private <T> Set<T> append(@Nullable Set<T> set, Iterable<? extends T> additions) {
-		Set<T> result = new LinkedHashSet<>((set != null) ? set : Collections.emptySet());
-		additions.forEach(result::add);
-		return Collections.unmodifiableSet(result);
 	}
 
 }

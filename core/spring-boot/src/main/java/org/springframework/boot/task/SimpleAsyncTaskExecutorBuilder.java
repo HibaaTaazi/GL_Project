@@ -46,7 +46,7 @@ import org.springframework.util.CollectionUtils;
  * @author Yanming Zhou
  * @since 3.2.0
  */
-public class SimpleAsyncTaskExecutorBuilder {
+public class SimpleAsyncTaskExecutorBuilder extends AbstractTaskBuilderSupport<SimpleAsyncTaskExecutorBuilder> {
 
 	private final @Nullable Boolean virtualThreads;
 
@@ -276,12 +276,6 @@ public class SimpleAsyncTaskExecutorBuilder {
 			this.customizers.forEach((customizer) -> customizer.customize(taskExecutor));
 		}
 		return taskExecutor;
-	}
-
-	private <T> Set<T> append(@Nullable Set<T> set, Iterable<? extends T> additions) {
-		Set<T> result = new LinkedHashSet<>((set != null) ? set : Collections.emptySet());
-		additions.forEach(result::add);
-		return Collections.unmodifiableSet(result);
 	}
 
 }

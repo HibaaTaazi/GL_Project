@@ -41,7 +41,7 @@ import org.springframework.util.CollectionUtils;
  * @author Stephane Nicoll
  * @since 3.2.0
  */
-public class ThreadPoolTaskSchedulerBuilder {
+public class ThreadPoolTaskSchedulerBuilder extends AbstractTaskBuilderSupport<ThreadPoolTaskSchedulerBuilder> {
 
 	private final @Nullable Integer poolSize;
 
@@ -221,10 +221,5 @@ public class ThreadPoolTaskSchedulerBuilder {
 		return taskScheduler;
 	}
 
-	private <T> Set<T> append(@Nullable Set<T> set, Iterable<? extends T> additions) {
-		Set<T> result = new LinkedHashSet<>((set != null) ? set : Collections.emptySet());
-		additions.forEach(result::add);
-		return Collections.unmodifiableSet(result);
-	}
 
 }

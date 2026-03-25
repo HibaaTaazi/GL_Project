@@ -42,7 +42,7 @@ import org.springframework.util.CollectionUtils;
  * @author Moritz Halbritter
  * @since 3.2.0
  */
-public class SimpleAsyncTaskSchedulerBuilder {
+public class SimpleAsyncTaskSchedulerBuilder extends AbstractTaskBuilderSupport<SimpleAsyncTaskSchedulerBuilder> {
 
 	private final @Nullable String threadNamePrefix;
 
@@ -211,12 +211,6 @@ public class SimpleAsyncTaskSchedulerBuilder {
 			this.customizers.forEach((customizer) -> customizer.customize(taskScheduler));
 		}
 		return taskScheduler;
-	}
-
-	private <T> Set<T> append(@Nullable Set<T> set, Iterable<? extends T> additions) {
-		Set<T> result = new LinkedHashSet<>((set != null) ? set : Collections.emptySet());
-		additions.forEach(result::add);
-		return Collections.unmodifiableSet(result);
 	}
 
 }

@@ -21,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.List;
 
 import groovy.lang.Closure;
 import org.jspecify.annotations.Nullable;
@@ -68,6 +69,13 @@ class BeanDefinitionLoader {
 	private final AnnotatedBeanDefinitionReader annotatedReader;
 
 	private final AbstractBeanDefinitionReader xmlReader;
+
+	private final List<SourceLoader> sourceLoaders = List.of(
+			new ClassSourceLoader(),
+			new ResourceSourceLoader(),
+			new PackageSourceLoader(),
+			new CharSequenceSourceLoader()
+	);
 
 	private final @Nullable BeanDefinitionReader groovyReader;
 
@@ -133,21 +141,11 @@ class BeanDefinitionLoader {
 
 	private void load(Object source) {
 		Assert.notNull(source, "'source' must not be null");
-		if (source instanceof Class<?> type) {
-			load(type);
-			return;
-		}
-		if (source instanceof Resource resource) {
-			load(resource);
-			return;
-		}
-		if (source instanceof Package pack) {
-			load(pack);
-			return;
-		}
-		if (source instanceof CharSequence sequence) {
-			load(sequence);
-			return;
+		for (SourceLoader loader : this.sourceLoaders) {
+			if (loader.canLoad(source)) {
+				loader.load(source);
+				return;
+			}
 		}
 		throw new IllegalArgumentException("Invalid source type " + source.getClass());
 	}
@@ -331,6 +329,30 @@ class BeanDefinitionLoader {
 
 		Closure<?> getBeans();
 
+	}
+
+	private interface SourceLoader {
+		boolean canLoad(Object source);
+		void load(Object source);
+	}
+	private class ClassSourceLoader implements SourceLoader {
+		public boolean canLoad(Object source) { return source instanceof Class<?>; }
+		public void load(Object source) { load((Class<?>) source); }
+	}
+
+	private class ResourceSourceLoader implements SourceLoader {
+		public boolean canLoad(Object source) { return source instanceof Resource; }
+		public void load(Object source) { load((Resource) source); }
+	}
+
+	private class PackageSourceLoader implements SourceLoader {
+		public boolean canLoad(Object source) { return source instanceof Package; }
+		public void load(Object source) { load((Package) source); }
+	}
+
+	private class CharSequenceSourceLoader implements SourceLoader {
+		public boolean canLoad(Object source) { return source instanceof CharSequence; }
+		public void load(Object source) { load((CharSequence) source); }
 	}
 
 }

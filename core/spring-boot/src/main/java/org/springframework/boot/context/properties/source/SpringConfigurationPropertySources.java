@@ -90,42 +90,46 @@ class SpringConfigurationPropertySources implements Iterable<ConfigurationProper
 			this.iterators.push(iterator);
 			this.adapter = adapter;
 		}
-
 		@Override
 		public boolean hasNext() {
-			return fetchNext() != null;
+			ensureNextIsFetched();
+			return this.next != null;
 		}
 
 		@Override
 		public ConfigurationPropertySource next() {
-			ConfigurationPropertySource next = fetchNext();
-			if (next == null) {
+			ensureNextIsFetched();
+			if (this.next == null) {
 				throw new NoSuchElementException();
 			}
+			ConfigurationPropertySource result = this.next;
 			this.next = null;
-			return next;
+			return result;
 		}
 
-		private @Nullable ConfigurationPropertySource fetchNext() {
-			if (this.next == null) {
-				if (this.iterators.isEmpty()) {
-					return null;
-				}
-				if (!this.iterators.peek().hasNext()) {
-					this.iterators.pop();
-					return fetchNext();
-				}
-				PropertySource<?> candidate = this.iterators.peek().next();
-				if (candidate.getSource() instanceof ConfigurableEnvironment configurableEnvironment) {
-					push(configurableEnvironment);
-					return fetchNext();
-				}
-				if (isIgnored(candidate)) {
-					return fetchNext();
-				}
-				this.next = this.adapter.apply(candidate);
+		private void ensureNextIsFetched() {
+			if (this.next != null) {
+				return;
 			}
-			return this.next;
+			if (this.iterators.isEmpty()) {
+				return;
+			}
+			if (!this.iterators.peek().hasNext()) {
+				this.iterators.pop();
+				ensureNextIsFetched();
+				return;
+			}
+			PropertySource<?> candidate = this.iterators.peek().next();
+			if (candidate.getSource() instanceof ConfigurableEnvironment configurableEnvironment) {
+				push(configurableEnvironment);
+				ensureNextIsFetched();
+				return;
+			}
+			if (isIgnored(candidate)) {
+				ensureNextIsFetched();
+				return;
+			}
+			this.next = this.adapter.apply(candidate);
 		}
 
 		private void push(ConfigurableEnvironment environment) {

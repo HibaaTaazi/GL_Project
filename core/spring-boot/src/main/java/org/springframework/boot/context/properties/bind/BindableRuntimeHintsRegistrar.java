@@ -27,8 +27,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import kotlin.jvm.JvmClassMappingKt;
-import kotlin.reflect.KClass;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
@@ -38,10 +36,8 @@ import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.ReflectionHints;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperties;
 import org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty;
-import org.springframework.core.KotlinDetector;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.util.Assert;
@@ -196,18 +192,13 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
 		private void handleConstructor(ReflectionHints hints) {
 			if (this.bindConstructor != null) {
-				if (KotlinDetector.isKotlinType(this.bindConstructor.getDeclaringClass())) {
-					KotlinDelegate.handleConstructor(hints, this.bindConstructor);
-				}
-				else {
-					hints.registerConstructor(this.bindConstructor, ExecutableMode.INVOKE);
-				}
+				hints.registerConstructor(this.bindConstructor, ExecutableMode.INVOKE);
 				return;
 			}
 			Arrays.stream(this.type.getDeclaredConstructors())
-				.filter(this::hasNoParameters)
-				.findFirst()
-				.ifPresent((constructor) -> hints.registerConstructor(constructor, ExecutableMode.INVOKE));
+					.filter(this::hasNoParameters)
+					.findFirst()
+					.ifPresent((constructor) -> hints.registerConstructor(constructor, ExecutableMode.INVOKE));
 		}
 
 		private boolean hasNoParameters(Constructor<?> candidate) {
@@ -252,7 +243,6 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			}
 			Class<?> componentType = getComponentClass(propertyType);
 			if (componentType != null) {
-				// Can be a list of simple types
 				if (!isJavaType(componentType)) {
 					processNested(componentType, hints);
 				}
@@ -272,7 +262,6 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 				return null;
 			}
 			if (isContainer(componentType)) {
-				// Resolve nested generics like Map<String, List<SomeType>>
 				return getComponentClass(componentType);
 			}
 			return componentType.toClass();
@@ -303,14 +292,6 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			return Map.class.isAssignableFrom(type.toClass());
 		}
 
-		/**
-		 * Specify whether the specified property refer to a nested type. A nested type
-		 * represents a sub-namespace that need to be fully resolved. Nested types are
-		 * either inner classes or annotated with {@link NestedConfigurationProperty}.
-		 * @param propertyName the name of the property
-		 * @param propertyType the type of the property
-		 * @return whether the specified {@code propertyType} is a nested type
-		 */
 		private boolean isNestedType(String propertyName, Class<?> propertyType) {
 			Class<?> declaringClass = propertyType.getDeclaringClass();
 			if (declaringClass != null && isNested(declaringClass, this.type)) {
@@ -329,23 +310,6 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
 		private boolean isJavaType(Class<?> candidate) {
 			return candidate.getPackageName().startsWith("java.");
-		}
-
-	}
-
-	/**
-	 * Inner class to avoid a hard dependency on Kotlin at runtime.
-	 */
-	private static final class KotlinDelegate {
-
-		static void handleConstructor(ReflectionHints hints, Constructor<?> constructor) {
-			KClass<?> kClass = JvmClassMappingKt.getKotlinClass(constructor.getDeclaringClass());
-			if (kClass.isData()) {
-				hints.registerType(constructor.getDeclaringClass(), MemberCategory.INVOKE_DECLARED_CONSTRUCTORS);
-			}
-			else {
-				hints.registerConstructor(constructor, ExecutableMode.INVOKE);
-			}
 		}
 
 	}
