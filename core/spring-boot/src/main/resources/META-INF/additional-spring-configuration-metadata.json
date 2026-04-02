@@ -2,7 +2,7 @@
   "groups": [
     {
       "name": "logging",
-      "type": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "type": "org.springframework.boot.context.LoggingApplicationListener"
     }
   ],
   "properties": [
@@ -10,7 +10,7 @@
       "name": "debug",
       "type": "java.lang.Boolean",
       "description": "Enable debug logs.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": false
     },
     {
@@ -27,20 +27,20 @@
       "name": "logging.config",
       "type": "java.lang.String",
       "description": "Location of the logging configuration file. For instance, `classpath:logback.xml` for Logback.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.console.enabled",
       "type": "java.lang.Boolean",
       "description": "Whether to enable console-based logging.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.exception-conversion-word",
       "type": "java.lang.String",
       "description": "Conversion word used when logging exceptions.",
       "defaultValue": "%wEx",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.file",
@@ -83,13 +83,13 @@
       "name": "logging.file.name",
       "type": "java.lang.String",
       "description": "Log file name (for instance, `myapp.log`). Names can be an exact location or relative to the current directory.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.file.path",
       "type": "java.lang.String",
       "description": "Location of the log file. For instance, `/var/log`.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.file.total-size-cap",
@@ -104,27 +104,27 @@
       "name": "logging.group",
       "type": "java.util.Map<java.lang.String,java.util.List<java.lang.String>>",
       "description": "Log groups to quickly change multiple loggers at the same time. For instance, `logging.group.db=org.hibernate,org.springframework.jdbc`.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.include-application-group",
       "type": "java.lang.Boolean",
       "description": "Whether to include the application group in the logs.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": true
     },
     {
       "name": "logging.include-application-name",
       "type": "java.lang.Boolean",
       "description": "Whether to include the application name in the logs.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": true
     },
     {
       "name": "logging.level",
       "type": "java.util.Map<java.lang.String,java.lang.String>",
       "description": "Log levels severity mapping. For instance, `logging.level.org.springframework=DEBUG`.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.log4j2.config.override",
@@ -135,35 +135,35 @@
       "name": "logging.logback.rollingpolicy.clean-history-on-start",
       "type": "java.lang.Boolean",
       "description": "Whether to clean the archive log files on startup.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": false
     },
     {
       "name": "logging.logback.rollingpolicy.file-name-pattern",
       "type": "java.lang.String",
       "description": "Pattern for rolled-over log file names.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": "${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz"
     },
     {
       "name": "logging.logback.rollingpolicy.max-file-size",
       "type": "org.springframework.util.unit.DataSize",
       "description": "Maximum log file size.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": "10MB"
     },
     {
       "name": "logging.logback.rollingpolicy.max-history",
       "type": "java.lang.Integer",
       "description": "Maximum number of archive log files to keep.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": 7
     },
     {
       "name": "logging.logback.rollingpolicy.total-size-cap",
       "type": "org.springframework.util.unit.DataSize",
       "description": "Total size of log backups to be kept.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": "0B"
     },
     {
@@ -180,32 +180,32 @@
       "name": "logging.pattern.console",
       "type": "java.lang.String",
       "description": "Appender pattern for output to the console. Its default value varies according to the logging system.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.pattern.correlation",
       "type": "java.lang.String",
       "description": "Appender pattern for log correlation. Its default value varies according to the logging system.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.pattern.dateformat",
       "type": "java.lang.String",
       "description": "Appender pattern for log date format.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
     },
     {
       "name": "logging.pattern.file",
       "type": "java.lang.String",
       "description": "Appender pattern for output to a file. Its default value varies according to the logging system.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener"
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener"
     },
     {
       "name": "logging.pattern.level",
       "type": "java.lang.String",
       "description": "Appender pattern for log level.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": "%5p"
     },
     {
@@ -221,7 +221,7 @@
       "name": "logging.register-shutdown-hook",
       "type": "java.lang.Boolean",
       "description": "Register a shutdown hook for the logging system when it is initialized. Disabled automatically when deployed as a war file.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": true
     },
     {
@@ -645,7 +645,7 @@
       "name": "trace",
       "type": "java.lang.Boolean",
       "description": "Enable trace logs.",
-      "sourceType": "org.springframework.boot.context.logging.LoggingApplicationListener",
+      "sourceType": "org.springframework.boot.context.LoggingApplicationListener",
       "defaultValue": false
     }
   ],

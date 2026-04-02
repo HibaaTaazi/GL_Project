@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.LoggingApplicationListener;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.boot.logging.LogFile;
 import org.springframework.boot.logging.LoggingSystem;
